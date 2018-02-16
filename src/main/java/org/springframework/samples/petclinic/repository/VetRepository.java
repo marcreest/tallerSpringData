@@ -15,9 +15,16 @@
  */
 package org.springframework.samples.petclinic.repository;
 
+import java.util.List;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.samples.petclinic.model.Vet;
 
 public interface VetRepository extends JpaRepository<Vet, Integer> {
-
+	
+	List<Vet> findByFirstName( String firstName );
+	
+	List<Vet> findByFirstNameAndLastName( String firstName, String lastName );
+	
+	List<Vet> findByFirstNameOrLastName( String firstName, String lastName );
 }

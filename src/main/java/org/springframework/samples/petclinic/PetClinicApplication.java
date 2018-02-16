@@ -16,12 +16,18 @@
 
 package org.springframework.samples.petclinic;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
+import org.springframework.samples.petclinic.model.Specialty;
+import org.springframework.samples.petclinic.model.Vet;
 import org.springframework.samples.petclinic.repository.SpecialityRepository;
 import org.springframework.samples.petclinic.repository.VetRepository;
 
@@ -48,6 +54,64 @@ public class PetClinicApplication {
 			log.info("*****************************************************");
 			
 			//TODO Añade aquí tu código
+			Vet veterinario = new Vet();
+			
+			veterinario.setFirstName( "Israel" );
+			veterinario.setLastName( "Fernández" );
+
+			veterinario = vetRepository.save( veterinario );
+			
+			Vet resultado = vetRepository.findOne( veterinario.getId() );
+			System.out.println( "Se ha insertado: " + resultado.getFirstName() + " " + resultado.getLastName() + "." );
+			
+			List<Specialty> especialidades = specialityRepository.findAll();
+			for( Specialty s: especialidades ) {
+				veterinario.addSpecialty( s );
+			}
+			vetRepository.save( veterinario );
+			
+			List<Vet> listaVeterinarios = vetRepository.findAll();
+			
+			for( Vet v: listaVeterinarios ) {
+				System.out.print( "Veterinario: " + v.getFirstName() + " " + v.getLastName() + ". Especialidades: " );
+				for( Specialty s: v.getSpecialties() ) {
+					System.out.print( s.getName() + ", " );
+				}
+				System.out.print( "\n" );
+			}
+			
+			//Obtener una lista de Vets filtrando por lastName.
+			System.out.println( "Obtener una lista de Vets filtrando por lastName." );
+			List<Vet> lista1 = vetRepository.findByFirstName( "Israel" );
+			for( Vet v: lista1 ) {
+				System.out.print( "Veterinario: " + v.getFirstName() + " " + v.getLastName() + ". Especialidades: " );
+				for( Specialty s: v.getSpecialties() ) {
+					System.out.print( s.getName() + ", " );
+				}
+				System.out.print( "\n" );
+			}
+			
+			//Obtener una lista de Vets filtrando por firstName y lastName.
+			System.out.println( "Obtener una lista de Vets filtrando por firstName y lastName." );
+			List<Vet> lista2 = vetRepository.findByFirstNameAndLastName( "Israel", "Fernández" );
+			for( Vet v: lista2 ) {
+				System.out.print( "Veterinario: " + v.getFirstName() + " " + v.getLastName() + ". Especialidades: " );
+				for( Specialty s: v.getSpecialties() ) {
+					System.out.print( s.getName() + ", " );
+				}
+				System.out.print( "\n" );
+			}
+			
+			//Obtener una lista de Vets filtrando buscando en firstName o lastName.
+			System.out.println( "Obtener una lista de Vets filtrando buscando en firstName o lastName." );
+			List<Vet> lista3 = vetRepository.findByFirstNameOrLastName( "Israel", "" );
+			for( Vet v: lista3 ) {
+				System.out.print( "Veterinario: " + v.getFirstName() + " " + v.getLastName() + ". Especialidades: " );
+				for( Specialty s: v.getSpecialties() ) {
+					System.out.print( s.getName() + ", " );
+				}
+				System.out.print( "\n" );
+			}
 		};
 	}
     
